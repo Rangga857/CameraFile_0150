@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 class CameraPage extends StatefulWidget {
@@ -8,6 +9,7 @@ class CameraPage extends StatefulWidget {
 }
 
 class _CameraPageState extends State<CameraPage> {
+  late List<CameraDescription> cameras;
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
