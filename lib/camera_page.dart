@@ -19,7 +19,7 @@ class _CameraPageState extends State<CameraPage> {
   double _zoom = 1.0;
   double _maxZoom = 1.0;
   double _minZoom = 1.0;
-  bool isZoomSuported = false;
+  bool _isZoomSuported = false;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _CameraPageState extends State<CameraPage> {
     await controller.initialize();
     _minZoom = await controller.getMinZoomLevel();
     _maxZoom = await controller.getMaxZoomLevel();
-    isZoomSuported = _minZoom < _maxZoom;
+    _isZoomSuported = _minZoom < _maxZoom;
     _zoom = _minZoom;
 
     await controller.setZoomLevel(_zoom);
@@ -68,12 +68,12 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Future<void> _switchCamera() async{
+  void _switchCamera() async{
     final nextIndex = (_selectedCameraIdx + 1) % cameras.length;
     await _setupCamera(nextIndex);
   }
 
-  Future<void> _toggleFlash() async{
+  void _toggleFlash() async{
     FlashMode next = _flashMode == FlashMode.off
         ? FlashMode.auto
         : _flashMode == FlashMode.auto
@@ -84,6 +84,15 @@ class _CameraPageState extends State<CameraPage> {
       _flashMode = next;
     });
   }
+
+  void _setZoom(double value) async{
+    if (! _isZoomSuported) return;
+    _zoom = value.clamp(_minZoom, _maxZoom);
+    await _controller!.setZoomLevel(_zoom);
+    setState(() {});
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
