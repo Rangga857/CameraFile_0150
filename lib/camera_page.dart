@@ -112,9 +112,138 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  Widget _circleButton(IconData icon, VoidCallback onTap, {double size = 50}){
+    return ClipOval(
+      child: Material(
+        color: Colors.white24,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            width: size,
+            height: size,
+            child: Icon(icon, color: Colors.white,)
+            ,)
+        ),
+      ) ,
+    );
+  }
+
+  Widget _buildZoomControls(){
+    if(!_isZoomSuported) return const SizedBox.shrink();
+
+    return Positioned(
+      bottom: 160,
+      left: 20,
+      right: 20,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _circleButton(Icons.looks_one, () => _setZoom(1.0), size: 44),
+              const SizedBox(width: 10),
+              if (_maxZoom >=3.0)
+                _circleButton(Icons.looks_3, () => _setZoom(3.0), size: 44),
+              const SizedBox(width: 10),
+              if (_maxZoom >= 5.0)
+                _circleButton(Icons.looks_5, () => _setZoom(5.0), size: 44),        
+            ],
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              const Icon(Icons.zoom_out, color: Colors.white,),
+              Expanded(
+                child: Slider(
+                  value: _zoom,
+                  min: _minZoom,
+                  max: _maxZoom,
+                  divisions: ((_maxZoom - _minZoom) * 10).toInt(),
+                  label: '${_zoom.toStringAsFixed(1)}x',
+                  onChanged: (value) => _setZoom(value),
+                ),
+              ),
+              const Icon(Icons.zoom_in, color: Colors.white,),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.black45,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              '${_zoom.toStringAsFixed(1)}x',
+              style: const TextStyle(color: Colors.white),
+            ),
+          )
+        ],
+      )
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: (_controller?.value.isInitialized ?? false)
+          ? LayoutBuilder(
+            builder: (context, constraints){
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  GestureDetector(
+                    onTapDown: (d) => _handleTap(d, constraints),
+                    child: CameraPreview(_controller!),
+                  ),
+                  Positioned(
+                    top: 50,
+                    right: 20,
+                    child: Column(
+                      children: [
+                        _circleButton(
+                          Icons.flip_camera_android, _switchCamera),
+                        const SizedBox(height: 10),
+                        _circleButton(
+                          _flashIcon(), _toggleFlash),
+                      ],
+                    )
+                  ),
+                  _buildZoomControls(),
+                  Positioned(
+                    bottom: 40,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: FloatingActionButton(
+                        onPressed: _captureImage,
+                        backgroundColor: Colors.white,
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.black,
+                        ),
+                      )
+                    ),  
+                  ),                 
+                ],
+              );
+            },
+          )
+          :const Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+      )
+    );
   }
 }
