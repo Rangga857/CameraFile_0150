@@ -11,12 +11,12 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late List<CameraDescription> cameras;
-  CameraController? controller;
-  int selectedCameraIdx = 0;
+  CameraController? _controller;
+  int _selectedCameraIdx = 0;
   FlashMode flashMode = FlashMode.off;
-  double zoomLevel = 1.0;
-  double maxZoom = 1.0;
-  double minZoom = 1.0;
+  double _zoom = 1.0;
+  double _maxZoom = 1.0;
+  double _minZoom = 1.0;
   bool isZoomSuported = false;
 
   @override
@@ -28,10 +28,36 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> _initializeCamera() async{
     cameras = await availableCameras();
-    await _setupCamera(selectedCameraIdx);
+    await _setupCamera(_selectedCameraIdx);
   }
 
-  
+  Future<void> _setupCamera(int cameraIndex) async{
+    if (_controller != null){
+      await _controller!.dispose();
+    }
+
+    final controller = CameraController(
+      cameras[cameraIndex], 
+      ResolutionPreset.max,
+      enableAudio: false,
+      );
+
+    await controller.initialize();
+    _minZoom = await controller.getMinZoomLevel();
+    _maxZoom = await controller.getMaxZoomLevel();
+    isZoomSuported = _minZoom < _maxZoom;
+    _zoom = _minZoom;
+
+    await controller.setZoomLevel(_zoom);
+    await controller.setFlashMode(flashMode);
+    if (mounted){
+      setState(() {
+        _controller = controller;
+        _selectedCameraIdx = cameraIndex;
+      });
+    }
+    }
+
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
