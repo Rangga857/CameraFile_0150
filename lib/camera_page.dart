@@ -101,6 +101,17 @@ class _CameraPageState extends State<CameraPage> {
     _controller!.setExposurePoint(offset);
   }
 
+  IconData _flashIcon(){
+    switch (_flashMode){
+      case FlashMode.auto:
+        return Icons.flash_auto;
+      case FlashMode.always:
+        return Icons.flash_on;
+      default:
+        return Icons.flash_off;
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
