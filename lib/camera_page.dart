@@ -10,6 +10,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   late List<CameraDescription> cameras;
+  CameraController? controller;
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
