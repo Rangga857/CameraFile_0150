@@ -51,7 +51,7 @@ class _CameraPageState extends State<CameraPage> {
     _zoom = _minZoom;
 
     await controller.setZoomLevel(_zoom);
-    await controller.setFlashMode(flashMode);
+    await controller.setFlashMode(_flashMode);
     if (mounted){
       setState(() {
         _controller = controller;
@@ -69,6 +69,11 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Future<void> _switchCamera() async{
+    final nextIndex = (_selectedCameraIdx + 1) % cameras.length;
+    await _setupCamera(nextIndex);
+  }
+
+  Future<void> _toggleFlash() async{
     FlashMode next = _flashMode == FlashMode.off
         ? FlashMode.auto
         : _flashMode == FlashMode.auto
