@@ -144,8 +144,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     Emitter<CameraState> emit,
   ) async {
     if (state is! CameraReady) return;
-    emit((state as CameraReady).copyWith(
-      snackbarMessage: null,
+    final s = state as CameraReady;
+    emit(s.copyWith(
       clearSnackbar: true,
     ));
   }
@@ -170,6 +170,14 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
       imageFile: previous?.imageFile,
       snackbarMessage: null,
     ));
+  }
+
+  @override
+  Future<void> close() async {
+    if (state is CameraReady) {
+      await (state as CameraReady).controller.dispose();
+    }
+    return super.close();
   }
   
 }
