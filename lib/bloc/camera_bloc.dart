@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:camera_app/bloc/camera_event.dart';
 import 'package:camera_app/bloc/camera_state.dart';
+import 'package:flutter/material.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   late final List<CameraDescription> _cameras;
@@ -63,4 +64,19 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     final file = await s.controller.takePicture();
     event.onPictureTaken(File(file.path));
   }
+
+  Future<void> _onTapToFocus(
+    TapToFocus event,
+    Emitter<CameraState> emit,
+  ) async {
+    if (state is! CameraReady) return;
+    final s = state as CameraReady;
+    final relative = Offset(
+      event.position.dx / event.previewSize.width,
+      event.position.dy / event.previewSize.height,
+    );
+    await s.controller.setFocusPoint(relative);
+    await s.controller.setExposurePoint(relative);
+  }
+  
 }
