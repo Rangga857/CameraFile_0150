@@ -47,6 +47,7 @@ class _CameraPageState extends State<CameraPage> {
     await controller.initialize();
     _minZoom = await controller.getMinZoomLevel();
     _maxZoom = await controller.getMaxZoomLevel();
+    print("Zoom range: $_minZoom - $_maxZoom");
     _isZoomSuported = _minZoom < _maxZoom;
     _zoom = _minZoom;
 
@@ -89,6 +90,7 @@ class _CameraPageState extends State<CameraPage> {
     if (! _isZoomSuported) return;
     _zoom = value.clamp(_minZoom, _maxZoom);
     await _controller!.setZoomLevel(_zoom);
+    print('Zoom set to $_zoom');
     setState(() {});
   }
 
