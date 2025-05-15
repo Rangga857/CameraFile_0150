@@ -28,6 +28,25 @@ class HomePage extends StatelessWidget {
               state is CameraReady ? state.imageFile : null;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.camera),
+                        label: const Text('Ambil Foto'),
+                        onPressed: (){
+                          final bloc = context.read<CameraBloc>();
+                          if (bloc.state is! CameraReady){
+                            bloc.add(InitializeCamera());
+                          }
+                          bloc.add(OpenCameraAndCapture(context));
+                        }, 
+                      )
+                    )
+                  ],
+                )
+              ],
             );
           },
         )
