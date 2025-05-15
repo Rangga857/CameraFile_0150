@@ -30,6 +30,22 @@ class _CameraPageState extends State<CameraPage> {
     };
   }
 
+  Widget _circleButton(IconData icon, VoidCallback onTap) {
+    return ClipOval(
+      child: Material(
+        color: Colors.white24,
+        child: InkWell(
+          onTap: onTap,
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: Icon(icon, color: Colors.white),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold();
