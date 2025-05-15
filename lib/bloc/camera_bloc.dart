@@ -1,13 +1,14 @@
 import 'dart:io';
-
-import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:camera_app/bloc/camera_event.dart';
-import 'package:camera_app/bloc/camera_state.dart';
+import 'package:camera_app/camera_page.dart';
+import 'package:camera_app/storage_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'camera_event.dart';
+import 'camera_state.dart';
 
 class CameraBloc extends Bloc<CameraEvent, CameraState> {
   late final List<CameraDescription> _cameras;
