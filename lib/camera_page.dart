@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:camera_app/bloc/camera_bloc.dart';
 import 'package:camera_app/bloc/camera_event.dart';
 import 'package:camera_app/bloc/camera_state.dart';
@@ -19,6 +20,14 @@ class _CameraPageState extends State<CameraPage> {
     if (bloc.state is! CameraReady) {
       bloc.add(InitializeCamera());
     }
+  }
+
+  IconData _flashIcon(FlashMode mode) {
+    return switch (mode) {
+      FlashMode.auto => Icons.flash_auto,
+      FlashMode.always => Icons.flash_on,
+      _ => Icons.flash_off,
+    };
   }
 
   @override
