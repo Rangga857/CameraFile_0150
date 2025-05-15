@@ -1,6 +1,14 @@
-part of 'camera_bloc.dart';
+import 'dart:io';
+import 'package:camera/camera.dart';
 
-@immutable
-abstract class CameraState {}
+sealed class CameraState {}
 
-class CameraInitial extends CameraState {}
+final class CameraInitial extends CameraState {}
+
+final class CameraReady extends CameraState{
+  final CameraController controller;
+  final int selectedIndex;
+  final FlashMode flashMode;
+  final File? imageFile;
+  final String? snackbarMessage;
+}
