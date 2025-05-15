@@ -87,11 +87,27 @@ class _CameraPageState extends State<CameraPage> {
                     )
                   ),
                   Positioned(
-                    child: )
+                    bottom: 40,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {
+                          context.read<CameraBloc>().add(
+                            TakePicture(
+                              (file) => Navigator.pop(context, file)
+                            ),
+                          );
+                        },
+                        child: const Icon(Icons.camera_alt, color: Colors.black,),
+                      ),
+                    )
+                  )
                 ],
-              )
+              );
             }
-          )
+          );
         }
       ),
     );
